@@ -1,0 +1,44 @@
+# Step 1: eT_j selects master secret key 'm' and unique identity 'UID_eT_j'
+M_eT_j = h(concatenate(UID_eT_j, m))
+Y_eT_j = PUF(X_eT_j)
+h_eT_j = FEGen(Y_eT_j)
+
+# Communication to CS
+send_to_CS = {
+    'UID_eT_j': UID_eT_j,
+    'X_eT_j': X_eT_j,
+    'M_eT_j': M_eT_j
+}
+
+# Step 2: CS processes received data
+if C_eT_j exists in CS_database:
+    terminate_registration_phase()
+else:
+    C_eT_j = concatenate(UID_eT_j, s)  # s is CS master secret key
+    s_j = generate_random_number()
+    alpha_eT_j = h(concatenate(UID_eT_j, s, s_j))
+    beta_eT_j = h(concatenate(UID_eT_j, P_eT_j, s_j))
+    gamma_eT_j = h(concatenate(P_eT_j, M_eT_j))
+    delta_eT_j = s_j ^ h(concatenate(AID_eT_j, n))
+
+    # Store in FN_i database
+    store_in_FN_i = {
+        'beta_eT_j': beta_eT_j,
+        'X_eT_j': X_eT_j,
+        'gamma_eT_j': gamma_eT_j,
+        'delta_eT_j': delta_eT_j
+    }
+
+    # Communication to eT_j
+    communicate_to_eT_j = {
+        'beta_eT_j': beta_eT_j,
+        'alpha_eT_j': alpha_eT_j,
+        's_j': s_j
+    }
+
+# Step 3: eT_j receives and processes
+h_eT_j_dash = h_eT_j ^ s_j
+store_in_eT_j_database = {
+    'h_eT_j_dash': h_eT_j_dash,
+    'alpha_eT_j': alpha_eT_j
+}
