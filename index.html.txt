@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "pbc.h"
+#include "pbc_test.h"
 #include <string.h>
 #include <time.h>
 #include <openssl/bn.h>
